@@ -41,10 +41,6 @@ export const getMainLayoutHTML = (tasks, title = "Dashboard", activeMenu = "dash
                         <i class="${activeMenu === 'mytask' ? 'ph-fill' : 'ph-bold'} ph-check-square-offset text-2xl"></i> My Task
                     </a>
 
-                    <a href="#" data-menu="taskcategories" class="flex items-center gap-4 px-5 py-4 ${activeMenu === 'taskcategories' ? activeClass : inactiveClass}">
-                        <i class="${activeMenu === 'taskcategories' ? 'ph-fill' : 'ph-bold'} ph-check-square-offset text-2xl"></i> Task Categories
-                    </a>
-
                 </nav>
                 <a href="#" data-logout class="flex items-center gap-4 px-5 py-3 mt-auto text-gray-400 hover:text-white transition-all font-medium">
                     <i class="ph-bold ph-sign-out text-2xl"></i> Logout

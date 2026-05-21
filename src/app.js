@@ -3,7 +3,6 @@ import { getMainLayoutHTML } from "./views/mainLayoutView.js"; // Cái Khung L�
 import { getDashboardOverviewHTML } from "./views/dashboardView.js"; // Ruột thống kê
 import { getMyTaskDetailHTML } from "./views/myTaskView.js"; // Ruột chi tiết task
 import { mockTasks } from "./state/taskStore.js"; // Dữ liệu mẫu
-
 (() => {
     const appContainer = document.getElementById('app');
     let currentMode = 'signin';
@@ -86,7 +85,6 @@ import { mockTasks } from "./state/taskStore.js"; // Dữ liệu mẫu
         const menuDashboard = document.querySelector('[data-menu="dashboard"]');
         const menuMyTask = document.querySelector('[data-menu="mytask"]');
         const menuVital = document.querySelector('[data-menu="vital"]');
-        const menutaskcategories = document.querySelector('[data-menu="taskcategories"]');
 
         const logoutBtn = document.querySelector('[data-logout]');
 
@@ -114,14 +112,6 @@ import { mockTasks } from "./state/taskStore.js"; // Dữ liệu mẫu
                 renderMainScreen(vitalTasks, "Vital Tasks","vital", false);
             });
         }
-
-        if (menutaskcategories) {
-            menutaskcategories.addEventListener('click', (e) => {
-                e.preventDefault();
-                renderMainScreen(vitalTasks, "Tasks Categories","taskcategories", false);
-            });
-        }
-
         if (logoutBtn) {
             logoutBtn.addEventListener('click', (e) => {
                 e.preventDefault();
