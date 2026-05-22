@@ -146,7 +146,8 @@ import { mockTasks } from "./state/taskStore.js"; // Dữ liệu mẫu
     // 3. KHỞI CHẠY LẦN ĐẦU
     // ==========================================
     document.addEventListener('DOMContentLoaded', () => {
-        renderAuthScreen('signin');
+        // renderAuthScreen('signin');
+        renderMainScreen(mockTasks, "Dashboard", "dashboard",true);
     });
 
 })();

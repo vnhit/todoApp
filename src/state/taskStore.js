@@ -2,7 +2,7 @@ const STORAGE_KEY = 'my_personal_todo_tasks';
 
 const loadTasksFromStore = () =>{
     const saved = localStorage.getItem(STORAGE_KEY);
-    return saved ? JSON.parse(saved) : initialTasks;   
+    return saved ? JSON.parse(saved) : [];
 };
 
 export let mockTasks = loadTasksFromStore();
