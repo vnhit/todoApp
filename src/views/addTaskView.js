@@ -1,6 +1,6 @@
 // File: src/views/editTaskView.js
 
-export const getEditTaskViewHTML = (task = null, mode = 'edit') => {
+export const getAddTaskViewHTML = (task = null, mode = 'edit') => {
     const isAdd = mode === 'add';
     
     // Xử lý text hiển thị

@@ -4,6 +4,7 @@ import { getDashboardOverviewHTML } from "./views/dashboardView.js"; // Ruột t
 import { getMyTaskDetailHTML } from "./views/myTaskView.js"; // Ruột chi tiết task
 import { mockTasks } from "./state/taskStore.js"; // Dữ liệu mẫu
 import { getProfileViewHTML } from "./views/profileView.js";
+import { getAddTaskViewHTML } from "./views/addTaskView.js";
 (() => {
     const appContainer = document.getElementById('app');
     let currentMode = 'signin';
@@ -156,6 +157,18 @@ import { getProfileViewHTML } from "./views/profileView.js";
                 }
             });
         });
+        // Nút add task
+        const btnAddTask = document.getElementById("add-task-btn");
+        if(btnAddTask){
+            btnAddTask.addEventListener('click',(e) => {
+                e.preventDefault();
+                const detailContainer = document.getElementById('task-detail-container');
+                if(detailContainer){
+                    detailContainer.innerHTML = getAddTaskViewHTML();
+                    attachAuthEvents();
+                }
+            })
+        }
     };
 
     const attachProfileFormEvents = () => {

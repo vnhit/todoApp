@@ -61,7 +61,12 @@ export const getMainLayoutHTML = (tasks, title = "Dashboard", activeMenu = "dash
             <div class="flex-1 flex gap-6 px-10 py-6 overflow-hidden">
                 
                 <div class="w-1/2 flex flex-col h-full overflow-hidden">
-                    <h2 class="text-2xl font-bold text-slate-800 mb-4">${title}</h2>
+                    <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-2xl font-bold text-slate-800">${title}</h2>
+                            <button id="add-task-btn" class="bg-[#FF5722] text-white px-4 py-2 rounded-xl hover:bg-[#e64a19] transition-all text-sm font-semibold flex items-center gap-2">
+                                <i class="ph-bold ph-plus"></i> Add New
+                            </button>
+                    </div>
                     <div class="flex-1 overflow-y-auto pr-2 pb-10">
                         ${cardsListHTML || '<p class="text-gray-400 p-4 text-left">Hiện không có công việc nào!</p>'}
                     </div>
