@@ -1,5 +1,3 @@
-// File: src/views/myTaskView.js
-
 /**
  * Hàm đúc ra duy nhất phần ruột chi tiết của Task để nhét vào cột bên phải
  * @param {Object} task - Đối tượng chứa dữ liệu của task được click
@@ -32,6 +30,10 @@ export const getMyTaskDetailHTML = (task) => {
                 <h5 class="text-slate-800 font-bold text-sm mb-1 uppercase tracking-wide">Task Description:</h5>
                 <p class="text-[14px] whitespace-pre-line">${task.description}</p>
             </div>
+
+            <button class="bg-[#FF5722] text-white w-12 h-12 rounded-2xl flex items-center justify-center hover:bg-[#E64A19] transition-colors shadow-lg shadow-[#FF5722]/30">
+                    <i class="ph-fill ph-calendar-blank text-2xl"></i>
+            </button>
         </div>
     </div>
     `;

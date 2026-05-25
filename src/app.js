@@ -3,9 +3,14 @@ import { getMainLayoutHTML } from "./views/mainLayoutView.js"; // Cái Khung L�
 import { getDashboardOverviewHTML } from "./views/dashboardView.js"; // Ruột thống kê
 import { getMyTaskDetailHTML } from "./views/myTaskView.js"; // Ruột chi tiết task
 import { mockTasks } from "./state/taskStore.js"; // Dữ liệu mẫu
+import { getProfileViewHTML } from "./views/profileView.js";
 (() => {
     const appContainer = document.getElementById('app');
     let currentMode = 'signin';
+    let lastActiveMenu = 'dashboard';
+    let lastTasks = mockTasks;
+    let lastTitle = 'Dashboard';
+
 
     // ==========================================
     // 1. MODULE XỬ LÝ ĐĂNG KÝ / ĐĂNG NHẬP
@@ -64,6 +69,9 @@ import { mockTasks } from "./state/taskStore.js"; // Dữ liệu mẫu
     // 2. MODULE ĐIỀU PHỐI MÀN HÌNH CHÍNH (SPA ROUTER)
     // ==========================================
     const renderMainScreen = (tasksToDisplay, menuTitle, activeMenuName, showDashboardOverview = false) => {
+        lastActiveMenu = activeMenuName;
+        lastTasks = tasksToDisplay;
+        lastTitle = menuTitle;
         // Bước 1: Dựng Khung Lớn (Sidebar, Header, Cột Giữa) lên màn hình
         appContainer.innerHTML = getMainLayoutHTML(tasksToDisplay, menuTitle, activeMenuName);        
         // Bước 2: Tìm cái ô khoảng trắng ở cột phải
@@ -85,9 +93,17 @@ import { mockTasks } from "./state/taskStore.js"; // Dữ liệu mẫu
         const menuDashboard = document.querySelector('[data-menu="dashboard"]');
         const menuMyTask = document.querySelector('[data-menu="mytask"]');
         const menuVital = document.querySelector('[data-menu="vital"]');
-
+        const avatarBtn = document.getElementById('user-avatar-btn');
         const logoutBtn = document.querySelector('[data-logout]');
 
+        if(avatarBtn && detailContainer){
+            avatarBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                detailContainer.innerHTML = getProfileViewHTML();
+                attachProfileFormEvents();
+            })
+
+        }
         if (menuDashboard) {
             menuDashboard.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -140,6 +156,35 @@ import { mockTasks } from "./state/taskStore.js"; // Dữ liệu mẫu
                 }
             });
         });
+    };
+
+    const attachProfileFormEvents = () => {
+        const profileFrom = document.getElementById('profile-form');
+        if(profileFrom){
+            profileFrom.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const newName = document.getElementById('profile-name').value;
+                const newAvatarUrl = document.getElementById('profile-avatar-url').value;
+                const newPassword = document.getElementById('profile-password').value;
+
+                const currentUserData = JSON.parse(localStorage.getItem('todo_user')) || {};
+
+                const updateUser = {
+                    ...currentUserData,
+                    name: newName,
+                    avatar: newAvatarUrl || 'https://i.pravatar.cc/150?img=11',
+                    password: newPassword
+                };
+
+                localStorage.setItem('todo_user', JSON.stringify(updateUser));
+                alert('Cập nhập thành công');
+                renderMainScreen(lastTasks,lastTitle,lastActiveMenu,false);
+
+                document.getElementById('task-detail-container').innerHTML = getProfileViewHTML();
+                attachProfileFormEvents();
+
+            });
+        }
     };
 
     // ==========================================

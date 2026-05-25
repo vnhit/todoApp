@@ -9,6 +9,12 @@ export const getMainLayoutHTML = (tasks, title = "Dashboard", activeMenu = "dash
     
     const activeClass = "bg-white text-[#FF5722] rounded-2xl font-bold shadow-sm transition-all";
     const inactiveClass = "text-gray-400 hover:text-white transition-all font-medium";
+
+    const user = JSON.parse(localStorage.getItem('todo_user')) || {
+        name : 'admin',
+        email : 'admin@gmail.com',
+        avatar : 'https://i.pravatar.cc/150?img=11'
+    }
     
     return `
     <div class="h-screen w-screen flex overflow-hidden bg-[#F8F9FB] font-sans">
@@ -21,11 +27,11 @@ export const getMainLayoutHTML = (tasks, title = "Dashboard", activeMenu = "dash
             </div>
             <aside class="flex-1 bg-[#0A0A0A] rounded-tr-[40px] relative flex flex-col px-6 pb-8">
                 <div class="absolute -top-9 left-1/2 -translate-x-1/2 flex flex-col items-center">
-                    <img src="https://i.pravatar.cc/150?img=11" alt="User Avatar" class="w-24 h-24 rounded-full border-[6px] border-[#F8F9FB] object-cover bg-white shadow-sm">
+                    <img id="user-avatar-btn" src="${user.avartatr} || https://i.pravatar.cc/150?img=11" alt="User Avatar" class="w-24 h-24 rounded-full border-[6px] border-[#F8F9FB] object-cover bg-white shadow-sm">
                 </div>
                 <div class="mt-14 text-center">
-                    <h2 class="text-white font-semibold text-lg">amanuel</h2>
-                    <p class="text-gray-400 text-xs mt-0.5">amanuel@gmail.com</p>
+                    <h2 class="text-white font-semibold text-lg">${user.name}</h2>
+                    <p class="text-gray-400 text-xs mt-0.5">${user.email}</p>
                 </div>
                 <nav class="mt-10 space-y-1.5 flex-1">
                     
