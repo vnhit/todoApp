@@ -20,3 +20,10 @@ export const deleteTask = (taskId) => {
     mockTasks = mockTasks.filter(t => t.id !== taskId);
     saveTasks();
 };
+export const updateTask = (taskId, updateData) => {
+    const taskIndex = mockTasks.findIndex(t => t.id === taskId);
+    if(taskIndex !== -1){
+        mockTasks[taskIndex] = { ...mockTasks[taskIndex], ...updateData};
+        saveTasks();
+    }
+}

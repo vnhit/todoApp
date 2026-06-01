@@ -1,4 +1,3 @@
-// File: src/views/mainLayoutView.js
 import { getHeaderHTML } from '../components/Header.js';
 import { createTaskCardHTML } from '../components/TaskCard.js';
 
@@ -19,7 +18,10 @@ export const getMainLayoutHTML = (tasks, title = "Dashboard", activeMenu = "dash
     return `
     <div class="h-screen w-screen flex overflow-hidden bg-[#F8F9FB] font-sans">
         
-        <div class="w-[280px] flex flex-col h-full shrink-0">
+        <!-- Overlay for mobile sidebar -->
+        <div id="sidebar-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-30"></div>
+        
+        <div class="w-[280px] flex flex-col h-full shrink-0" id="mobile-sidebar">
             <div class="h-24 flex items-center pl-10">
                 <h1 class="text-3xl font-bold tracking-tight">
                     <span class="text-[#FF5722]">To</span><span class="text-slate-800">-Do</span>
@@ -27,7 +29,7 @@ export const getMainLayoutHTML = (tasks, title = "Dashboard", activeMenu = "dash
             </div>
             <aside class="flex-1 bg-[#0A0A0A] rounded-tr-[40px] relative flex flex-col px-6 pb-8">
                 <div class="absolute -top-9 left-1/2 -translate-x-1/2 flex flex-col items-center">
-                    <img id="user-avatar-btn" src="${user.avartatr} || https://i.pravatar.cc/150?img=11" alt="User Avatar" class="w-24 h-24 rounded-full border-[6px] border-[#F8F9FB] object-cover bg-white shadow-sm">
+                    <img id="user-avatar-btn" src="${user.avatar || 'https://i.pravatar.cc/150?img=11' }" alt="User Avatar" class="w-24 h-24 rounded-full border-[6px] border-[#F8F9FB] object-cover bg-white shadow-sm">
                 </div>
                 <div class="mt-14 text-center">
                     <h2 class="text-white font-semibold text-lg">${user.name}</h2>

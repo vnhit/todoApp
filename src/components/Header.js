@@ -2,12 +2,12 @@
 export const getHeaderHTML = () => {
     return `
     <header class="h-24 flex items-center justify-between px-10 shrink-0 border-b border-gray-100 bg-[#F8F9FB]">
+        <!-- Hamburger Menu Mobile -->
+        <button id="menu-toggle" class="md:hidden text-slate-800 hover:text-[#FF5722] transition-colors">
+            <i class="ph-bold ph-list text-2xl"></i>
+        </button>
+
         <div class="relative w-[480px]">
-            <input type="text" placeholder="Search your task here..." 
-                class="w-full bg-white border border-transparent rounded-2xl pl-6 pr-16 py-4 text-sm font-medium focus:outline-none focus:border-[#FF5722] focus:ring-4 focus:ring-[#FF5722]/10 transition-all shadow-sm text-slate-700">
-            <button class="absolute right-2 top-1/2 -translate-y-1/2 bg-[#FF5722] text-white w-10 h-10 rounded-xl flex items-center justify-center hover:bg-[#E64A19] transition-colors shadow-md shadow-[#FF5722]/30">
-                <i class="ph-bold ph-magnifying-glass text-lg"></i>
-            </button>
         </div>
 
         <div class="flex items-center gap-8">

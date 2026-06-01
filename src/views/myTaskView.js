@@ -1,8 +1,4 @@
-/**
- * Hàm đúc ra duy nhất phần ruột chi tiết của Task để nhét vào cột bên phải
- * @param {Object} task - Đối tượng chứa dữ liệu của task được click
- * @returns {string} Chuỗi HTML hiển thị chi tiết công việc
- */
+
 export const getMyTaskDetailHTML = (task) => {
     if (!task) return '';
     
@@ -23,7 +19,7 @@ export const getMyTaskDetailHTML = (task) => {
         <div class="space-y-5 text-slate-600 border-t border-gray-100 pt-5 leading-relaxed">
             <div>
                 <h5 class="text-slate-800 font-bold text-sm mb-1 uppercase tracking-wide">Objective:</h5>
-                <p class="text-[14px] bg-slate-50 p-3 rounded-xl border border-slate-100/50">${task.objective || 'N/A'}</p>
+                <p class="text-[14px] bg-slate-50 p-3 rounded-xl border border-slate-100/50">${task.objective || 'Study'}</p>
             </div>
             
             <div>

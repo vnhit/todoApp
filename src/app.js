@@ -2,9 +2,10 @@ import { createAuthHtml } from "./views/authView.js";
 import { getMainLayoutHTML } from "./views/mainLayoutView.js"; // Cái Khung Lớn
 import { getDashboardOverviewHTML } from "./views/dashboardView.js"; // Ruột thống kê
 import { getMyTaskDetailHTML } from "./views/myTaskView.js"; // Ruột chi tiết task
-import { mockTasks } from "./state/taskStore.js"; // Dữ liệu mẫu
+import { addTask, mockTasks, deleteTask, updateTask } from "./state/taskStore.js"; // Dữ liệu mẫu
 import { getProfileViewHTML } from "./views/profileView.js";
-import { getAddTaskViewHTML } from "./views/addTaskView.js";
+import { getEditTaskViewHTML } from "./views/addTaskView.js";
+
 (() => {
     const appContainer = document.getElementById('app');
     let currentMode = 'signin';
@@ -73,22 +74,37 @@ import { getAddTaskViewHTML } from "./views/addTaskView.js";
         lastActiveMenu = activeMenuName;
         lastTasks = tasksToDisplay;
         lastTitle = menuTitle;
-        // Bước 1: Dựng Khung Lớn (Sidebar, Header, Cột Giữa) lên màn hình
         appContainer.innerHTML = getMainLayoutHTML(tasksToDisplay, menuTitle, activeMenuName);        
-        // Bước 2: Tìm cái ô khoảng trắng ở cột phải
         const detailContainer = document.getElementById('task-detail-container');
         
-        // Bước 3: Nếu đang ở mode Dashboard, tự động nhét ruột thống kê vào cột phải
         if (detailContainer && showDashboardOverview) {
-            detailContainer.innerHTML = getDashboardOverviewHTML();
+            detailContainer.innerHTML = getDashboardOverviewHTML(mockTasks);
         }
         
-        // Bước 4: Gắn tai nghe sự kiện cho các nút vừa được vẽ ra
         attachMainEvents();
     };
 
     const attachMainEvents = () => {
         const detailContainer = document.getElementById('task-detail-container');
+        
+        // === MOBILE HAMBURGER MENU ===
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        
+        if (menuToggle && mobileMenu) {
+            menuToggle.addEventListener('click', () => {
+                mobileMenu.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+        }
+        
+        if (overlay) {
+            overlay.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+        }
 
         // --- A. BẮT SỰ KIỆN CLICK CHUYỂN MENU BÊN TRÁI ---
         const menuDashboard = document.querySelector('[data-menu="dashboard"]');
@@ -96,43 +112,53 @@ import { getAddTaskViewHTML } from "./views/addTaskView.js";
         const menuVital = document.querySelector('[data-menu="vital"]');
         const avatarBtn = document.getElementById('user-avatar-btn');
         const logoutBtn = document.querySelector('[data-logout]');
+        
+        // Helper function to close mobile menu
+        const closeMobileMenu = () => {
+            if (mobileMenu && overlay) {
+                mobileMenu.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+        };
 
         if(avatarBtn && detailContainer){
             avatarBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 detailContainer.innerHTML = getProfileViewHTML();
                 attachProfileFormEvents();
+                closeMobileMenu();
             })
 
         }
         if (menuDashboard) {
             menuDashboard.addEventListener('click', (e) => {
                 e.preventDefault();
-                // Bấm Dashboard: Dựng lại khung, nhét ruột tổng quan vào ô phải
                 renderMainScreen(mockTasks, "Dashboard", "dashboard",true);
+                closeMobileMenu();
             });
         }
 
         if (menuMyTask) {
             menuMyTask.addEventListener('click', (e) => {
                 e.preventDefault();
-                // Bấm My Task: Hiện toàn bộ Task ở cột giữa, ô phải để trống chờ click
                 renderMainScreen(mockTasks, "My Tasks","mytask", false);
+                closeMobileMenu();
             });
         }
 
         if (menuVital) {
             menuVital.addEventListener('click', (e) => {
                 e.preventDefault();
-                // Bấm Vital Task: Lọc mảng chỉ lấy Extreme, đổ vào cột giữa
                 const vitalTasks = mockTasks.filter(t => t.priority === 'Extreme');
                 renderMainScreen(vitalTasks, "Vital Tasks","vital", false);
+                closeMobileMenu();
             });
         }
         if (logoutBtn) {
             logoutBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 if(confirm("Ông có chắc muốn đăng xuất không?")) {
+                    closeMobileMenu();
                     renderAuthScreen('signin');
                 }
             });
@@ -145,13 +171,10 @@ import { getAddTaskViewHTML } from "./views/addTaskView.js";
             card.addEventListener('click', (e) => {
                 e.preventDefault();
                 
-                // 1. Lấy ID của cái Card vừa click
                 const clickedId = parseInt(card.getAttribute('data-task-id'));
                 
-                // 2. Đi tìm dữ liệu của Task đó trong kho mockTasks
                 const selectedTask = mockTasks.find(t => t.id === clickedId);
                 
-                // 3. Nếu tìm thấy thì bốc ruột từ myTaskView ném thẳng vào ô phải!
                 if (selectedTask && detailContainer) {
                     detailContainer.innerHTML = getMyTaskDetailHTML(selectedTask);
                 }
@@ -164,12 +187,79 @@ import { getAddTaskViewHTML } from "./views/addTaskView.js";
                 e.preventDefault();
                 const detailContainer = document.getElementById('task-detail-container');
                 if(detailContainer){
-                    detailContainer.innerHTML = getAddTaskViewHTML();
-                    attachAuthEvents();
+                    detailContainer.innerHTML = getEditTaskViewHTML(null,'add');
+                    attachEditFormEvents();
                 }
             })
         }
+
+        // BẮT SỰ KIỆN TOGGLE MENU
+        const toggleMenuBtns = document.querySelectorAll('[data-action="toggle-menu"]');
+        toggleMenuBtns.forEach(btn =>{
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const taskId = btn.getAttribute('data-task-id');
+                const menu = document.getElementById(`menu-${taskId}`);
+
+                if(menu){
+                    menu.classList.toggle('hidden');
+                }
+            });
+        });
+        // BẮT SỰ KIÊN EDIT, REMOVE,FINISH
+        const editBtns = document.querySelectorAll('[data-action="edit-task"]');
+        const finishBtns = document.querySelectorAll('[data-action="finish-task"]');
+        const removeBtns = document.querySelectorAll('[data-action="remove-task"]');
+
+        // EDIT
+        editBtns.forEach(btn =>{
+            btn.addEventListener('click', (e) =>{
+                e.preventDefault();
+                e.stopPropagation();
+
+                const taskId = parseInt(btn.getAttribute('data-task-id'));
+                const selectedTask = mockTasks.find(t => t.id === taskId);
+
+                if(selectedTask && detailContainer){
+                    detailContainer.innerHTML = getEditTaskViewHTML(selectedTask,'edit');
+                    attachEditFormEvents(selectedTask);
+                }
+            });
+        });
+        // FINISH
+        finishBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const taskId = parseInt(btn.getAttribute('data-task-id'));
+                updateTask(taskId, { status: 'completed' });
+                
+                alert('✅ Task đã hoàn thành!');
+                renderMainScreen(lastTasks, lastTitle, lastActiveMenu, false);
+            });
+        });
+        // REMOVE
+        removeBtns.forEach(btn =>{
+            btn.addEventListener('click', (e) =>{
+                e.preventDefault();
+                e.stopPropagation();
+                const taskId = parseInt(btn.getAttribute('data-task-id'));
+                if(confirm('Bạn chắc muốn xóa ko')) {
+                    deleteTask(taskId);
+                    alert('Xóa thành công');
+                    renderMainScreen(lastTasks,lastTitle, lastActiveMenu, false);
+                }
+            });
+        });
     };
+    // đóng menu khi click ngoài
+    document.addEventListener('click', (e) => {
+        const allMenus = document.querySelectorAll('[id^="menu-"]');
+        allMenus.forEach(menu => menu.classList.add('hidden'));
+
+    })
 
     const attachProfileFormEvents = () => {
         const profileFrom = document.getElementById('profile-form');
@@ -200,12 +290,60 @@ import { getAddTaskViewHTML } from "./views/addTaskView.js";
         }
     };
 
+    const attachEditFormEvents = (existingTask = null) => {
+        const editForm = document.getElementById('edit-task-form');
+        if(!editForm) return;
+
+        editForm.addEventListener('submit', (e) =>{
+            e.preventDefault();
+            const title = document.getElementById('edit-title').value;
+            const date = document.getElementById('edit-date').value;
+            const priority = document.getElementById('edit-priority').value;
+            const description = document.getElementById('edit-description').value;
+            const image = document.getElementById('edit-image').value;
+
+            if(!title.trim()){
+                alert('⚠️ Vui lòng nhâp tiêu đề');
+                return;
+            }
+            if(existingTask){
+                updateTask(existingTask.id,{
+                    title: title,
+                    date: date,
+                    priority: priority,
+                    description: description,
+                    image: image
+                });
+            }else{
+                const newTask = {
+                    id: Date.now(), 
+                    title: title,
+                    date: date || new Date().toISOString().split('T')[0], 
+                    priority: priority,
+                    description: description,
+                    image: image || 'https://via.placeholder.com/300x200?text=Task', 
+                    status: 'pending'
+                };
+                addTask(newTask);
+                alert('Thêm thành công');
+            }
+            renderMainScreen(lastTasks,lastTitle, lastActiveMenu,false);
+        });
+        const goBackbtn = document.querySelector('[data-action="go-back"]');
+        if(goBackbtn){
+            goBackbtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                renderMainScreen(lastTasks, lastTitle, lastActiveMenu,false);
+            })
+        }
+    }
+
     // ==========================================
     // 3. KHỞI CHẠY LẦN ĐẦU
     // ==========================================
     document.addEventListener('DOMContentLoaded', () => {
-        // renderAuthScreen('signin');
-        renderMainScreen(mockTasks, "Dashboard", "dashboard",true);
+        renderAuthScreen('signin');
+        // renderMainScreen(mockTasks, "Dashboard", "dashboard",true);
     });
 
 })();

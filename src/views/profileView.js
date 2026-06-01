@@ -1,4 +1,3 @@
-// File: src/views/profileView.js
 
 export const getProfileViewHTML = () => {
     // Lấy thông tin user hiện tại ra, nếu chưa có thì dùng thông tin mặc định cũ

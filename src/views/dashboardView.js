@@ -1,6 +1,8 @@
-// File: src/views/dashboardView.js
 
-export const getDashboardOverviewHTML = () => {
+export const getDashboardOverviewHTML = (tasks) => {
+    const totalTasks = tasks.length;
+    const inProgressTasks = tasks.filter(t => t.status === 'pending').length;
+    const completedTasks = tasks.filter(t => t.status === 'completed').length;
     return `
     <div class="p-6 h-full w-full flex flex-col items-start justify-start text-left bg-white rounded-3xl">
         <div class="mb-8 mt-2">
@@ -15,7 +17,7 @@ export const getDashboardOverviewHTML = () => {
                 </div>
                 <div>
                     <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Total Tasks</p>
-                    <h3 class="text-2xl font-extrabold text-slate-800 mt-0.5">12 Công việc</h3>
+                    <h3 class="text-2xl font-extrabold text-slate-800 mt-0.5">${totalTasks} Công việc</h3>
                 </div>
             </div>
             
@@ -25,7 +27,7 @@ export const getDashboardOverviewHTML = () => {
                 </div>
                 <div>
                     <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">In Progress</p>
-                    <h3 class="text-2xl font-extrabold text-slate-800 mt-0.5">4 Đang làm</h3>
+                    <h3 class="text-2xl font-extrabold text-slate-800 mt-0.5">${inProgressTasks} Đang làm</h3>
                 </div>
             </div>
 
@@ -35,7 +37,7 @@ export const getDashboardOverviewHTML = () => {
                 </div>
                 <div>
                     <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Completed</p>
-                    <h3 class="text-2xl font-extrabold text-slate-800 mt-0.5">8 Đã xong</h3>
+                    <h3 class="text-2xl font-extrabold text-slate-800 mt-0.5">${completedTasks} Đã xong</h3>
                 </div>
             </div>
         </div>
