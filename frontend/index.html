@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do Dashboard Pro</title>
+
+    <script async src="https://unpkg.com/@phosphor-icons/web@2.1.2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+
+    <link href="/static/dist/output.css" rel="stylesheet">
+</head>
+
+<body class="bg-[#F8F9FB] text-slate-800 font-sans antialiased overflow-hidden">
+
+    <div id="app" class="w-full h-screen">
+        <p class="p-6 text-slate-500">Đang tải ứng dụng…</p>
+    </div>
+    <noscript>Bật JavaScript trong trình duyệt để sử dụng ứng dụng.</noscript>
+    <div id="app-message" role="status" aria-live="polite" hidden></div>
+
+    <script type="module" src="/static/src/app.js" onerror="document.getElementById('app').textContent='Không tải được giao diện. Nhấn Ctrl + F5 để tải lại trang.'"></script>
+</body>
+</html>
