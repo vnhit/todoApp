@@ -1,0 +1,10 @@
+**/node_modules/
+**/.venv/
+**/__pycache__/
+**/*.py[cod]
+**/.env
+**/*.sqlite3
+**/*.sqlite3-*
+backend/staticfiles/
+frontend/dist/
+.test-artifacts/
